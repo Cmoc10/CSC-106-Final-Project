@@ -1,0 +1,17 @@
+draw= function() {
+    background(255, 255, 255);
+    fill(255, 0, 0);
+    triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
+    fill(47, 0, 255);
+rect(0,21,400,325);
+if(mouseX < 33){
+    
+}
+for(var k = 0; k<6; k++){
+    for(var i=0; i<7; i++){
+        fill(255, 255, 255);
+        ellipse(34+56*i, 49+k*54, 50, 50);
+    }
+
+}
+};
