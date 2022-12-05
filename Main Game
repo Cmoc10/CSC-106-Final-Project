@@ -1,17 +1,236 @@
+var currentScene = 0;
+var currentColor = color(0, 0, 0);
+background(255, 0, 0);
+fill(255, 255, 255);
+text("Welcome to Colin and Badhan's Game",104,37);
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 75;
+    this.height = config.height || 75;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+    this.color = config.color || (currentColor);
+};
+
+/***************
+ List of Methods
+ **************/
+//Button Draw Method
+Button.prototype.changeColor = function (newColor){
+  this.color = newColor;
+};
+//Draw Prototype Method
+Button.prototype.draw = function() {
+    fill(this.color);
+        ellipse(this.x, this.y, this.width, this.height);
+    fill(255, 0, 0);
+    textSize(23);
+    textAlign(CENTER,CENTER);
+    text(this.label, this.x, this.y);
+};
+//check if mouse is inside
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x-this.width/2 &&
+           mouseX < (this.x + this.width/2) &&
+           mouseY > this.y - this.height/2 &&
+           mouseY < (this.y + this.height/2);
+};
+
+//MouseClick Handle Method
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var bitmojiDraw = function(bitmojiX,bitmojiY,h) {
+    var p=h/10;
+fill(255, 224, 166);
+rect((bitmojiX+26)*p,(bitmojiY+72)*p,0.9*h,2.1*h,15);
+fill(0,255,0);
+rect((bitmojiX+24)*p,(bitmojiY+54)*p,1.4*h,2.7*h,20);
+fill(255, 224, 166);
+rect((bitmojiX+63)*p,(bitmojiY+72)*p,0.9*h,2.1*h,15);
+fill(0,255,0);
+rect((bitmojiX+61)*p,(bitmojiY+54)*p,1.4*h,2.7*h,20);
+rect((bitmojiX+35)*p,(bitmojiY+53)*p,2.8*h,4.3*h);
+fill(255, 224, 166);
+fill(0,255,0);
+//initials
+strokeWeight(2);
+arc((bitmojiX+47)*p,(bitmojiY+70)*p,1.5*h,1.3*h,90,270);
+ellipse((bitmojiX+55)*p,(bitmojiY+70)*p,1.3*h,1.3*h);
+//head+neck
+strokeWeight(1);
+fill(255, 224, 166);
+triangle((bitmojiX+56)*p,(bitmojiY+54)*p,(bitmojiX+49)*p,(bitmojiY+36)*p,(bitmojiX+44)*p,(bitmojiY+54)*p);
+ellipse((bitmojiX+50)*p,(bitmojiY+33)*p,2.8*h,3.5*h);
+arc((bitmojiX+50)*p,(bitmojiY+52)*p,1.2*h,0.9*h,0,180);
+//hair+hat
+fill(255, 246, 120);
+quad((bitmojiX+64)*p,(bitmojiY+25)*p,(bitmojiX+58)*p,(bitmojiY+25)*p,(bitmojiX+58)*p,(bitmojiY+35)*p,(bitmojiX+64)*p,(bitmojiY+36)*p);
+quad((bitmojiX+40)*p,(bitmojiY+25)*p,(bitmojiX+36)*p,(bitmojiY+25)*p,(bitmojiX+35)*p,(bitmojiY+36)*p,(bitmojiX+40)*p,(bitmojiY+35)*p);
+fill(38, 30, 30);
+arc((bitmojiX+49)*p,(bitmojiY+26)*p,3.1*h,2.5*h,-180,0);
+fill(255, 128, 0);
+noStroke();
+arc((bitmojiX+49)*p,(bitmojiY+26)*p,2.9*h,0.6*h,-180,0);
+ellipse((bitmojiX+50)*p,(bitmojiY+19)*p,0.5*h,0.5*h);
+fill(38, 30, 30);
+arc((bitmojiX+49)*p,(bitmojiY+19)*p,0.7*h,0.6*h,63,235);
+triangle((bitmojiX+50)*p,(bitmojiY+19)*p,(bitmojiX+55)*p,(bitmojiY+22)*p,(bitmojiX+51)*p,(bitmojiY+15)*p);
+//face
+fill(255, 255, 255);
+arc((bitmojiX+50)*p,(bitmojiY+43)*p,1.4*h,0.7*h,0,180);
+stroke(0,0,0);
+//ebitmojiYes
+ellipse((bitmojiX+44)*p,(bitmojiY+32)*p,0.6*h,0.4*h);
+ellipse((bitmojiX+54)*p,(bitmojiY+32)*p,0.6*h,0.4*h);
+fill(24, 130, 54);
+ellipse((bitmojiX+44)*p,(bitmojiY+32)*p,0.2*h,0.2*h);
+ellipse((bitmojiX+54)*p,(bitmojiY+32)*p,0.2*h,0.2*h);
+//nose
+noFill();
+bezier((bitmojiX+50)*p,(bitmojiY+32)*p,(bitmojiX+59)*p,(bitmojiY+41)*p,(bitmojiX+49)*p,(bitmojiY+42)*p,(bitmojiX+49)*p,(bitmojiY+40)*p);
+};
+
+// Bitmoji
+    var drawHead = function(x,y,h){
+        var p = h/100;
+        noStroke();
+        fill(229,184,135);
+        ellipse(x + 103*p, y + 100*p,82*p,100*p); // head
+        fill(0, 0, 0);
+        arc(x + 103*p, y + 96*p, 82*p, 93*p, 175, 367); // hair
+        fill(229,184,135);
+        rect(x + 74*p, y + 84*p,58*p,32*p); // line up
+    };
+    
+    var drawEyes = function(x,y,h){
+        var p = h/100;
+        fill(255, 255, 255);
+        ellipse(x + 90*p, y + 100*p,20*p,15*p); // left eye socket
+        ellipse(x + 117*p, y + 100*p,20*p,15*p); // left eye socket
+        fill(0, 0, 0);
+        ellipse(x + 90*p, y + 100*p,10*p,10*p); // left eye ball
+        ellipse(x + 117*p, y + 100*p,10*p,10*p); // left eye ball
+    };
+    
+    var drawNose = function(x,y,h){
+        var p = h/100;
+        stroke(0, 0, 0);
+        fill(229,184,135);
+        bezier(x + 104*p, y + 126*p, x + 99*p, y + 118*p, x + 120*p, y + 128*p,x + 104*p, y + 105*p); // nose
+    };
+    
+    var drawMouth = function(x,y,h){
+        var p = h/100;
+        fill(255, 255, 255);
+        arc(x + 105*p, y + 132*p,27*p,11*p,1,180); // mouth
+    };
+    
+    var drawBody = function(x,y,h){
+        var p = h/100;
+        noStroke();
+        fill(229,184,135); // neck color
+        rect(x + 90*p, y + 144*p,28*p,22*p); // neck
+        fill(105, 105, 105); // shirt color
+        rect(x + 61*p, y + 161*p,85*p,70*p); // shirt
+        fill(229,184,135); // neck color
+        arc(x + 104*p, y + 160*p,27*p,11*p,1,180); // neck to collar
+    };
+    
+    var drawArms = function(x,y,h){
+        var p = h/100;
+        noStroke();
+        fill(105, 105, 105);
+        arc(x + 64*p, y + 209*p,66*p,96*p,181,270); // left sleeve
+        arc(x + 144*p, y + 209*p,66*p,96*p,270,360); // right sleeve
+        fill(229,184,135);
+        rect(x + 35*p, y + 209*p,24*p,22*p); // left arm
+        rect(x + 150*p, y + 209*p,24*p,22*p); // right arm
+    };
+    
+    var drawHat = function(x,y,h){
+        var p = h/100;
+        stroke(0, 0, 0);
+        fill(255, 255, 255);
+        quad(x + 87*p, y + 37*p,x + 66*p, y + 74*p,x + 143*p, y + 74*p,x + 117*p, y + 37*p); // hat
+        rect(x + 37*p, y + 72*p,133*p,7*p); //hat bottom
+        fill(124, 193, 235);
+        textSize(30*p);
+        text("R", x + 92*p, y + 65*p);
+    };
+    
+    var drawIn = function(x,y,h){
+        var p = h/100;
+        fill(255, 255, 255);
+        textSize(40*p);
+        text("BH", x + 75*p, y + 204*p); // initials
+    };
+    
+    var drawHalf = function(x,y,h){
+        drawHead(x,y,h);
+        drawEyes(x,y,h);
+        drawNose(x,y,h);
+        drawMouth(x,y,h);
+    };
+    
+    var drawFull = function(x,y,h){
+        drawBody(x,y,h);
+        drawArms(x,y,h);
+        drawHat(x,y,h);
+        drawIn(x,y,h);
+    };
+    
+    var drawBitmojiB = function(x,y,h){
+        var p = h/100;
+        drawHalf(x,y,h);
+        drawFull(x,y,h);
+    };
+
+
+var btn1 = new Button({
+    x:203,
+    y:263,
+    label:"Start",
+    onClick: function(){
+        currentScene = 1;
+    }
+});
+
+
 draw= function() {
+if(currentScene === 0){
+    bitmojiDraw(73,200,10);   
+    drawBitmojiB(248, 207, 40);
+    btn1.draw();
+}
+if (currentScene === 1){
     background(255, 255, 255);
     fill(255, 0, 0);
     triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
     fill(47, 0, 255);
-rect(0,21,400,325);
-if(mouseX < 33){
-    
-}
-for(var k = 0; k<6; k++){
-    for(var i=0; i<7; i++){
-        fill(255, 255, 255);
-        ellipse(34+56*i, 49+k*54, 50, 50);
+    rect(0,21,400,325);
+    for(var k = 0; k<6; k++){
+        for(var i=0; i<7; i++){
+            fill(255, 255, 255);
+            ellipse(34+56*i, 49+k*54, 50, 50);
+        }
     }
-
 }
+};
+
+
+/*for the mouse clicked function I want to make the circles objects and then change their color values
+an alternative option would be to create new circles that draw over but then the background
+has to be changed which would be problematic
+*/
+var mouseClicked = function(){
+        btn1.handleMouseClick();
+        if(mouseX < 60 && mouseX > 0){
+            fill(255, 0, 0);
+            rect(60,20,10,10);
+        }
 };
