@@ -1,5 +1,8 @@
-var currentScene = 0;
-var currentColor = color(0, 0, 0);
+var currentScene = 1;
+var currentColor = color(255, 255, 255);
+var turns = 0;
+var stacks = [5,5,5,5,5,5,5];
+var column = [ [], [], [], [], [], [], [] ];
 background(255, 0, 0);
 fill(255, 255, 255);
 text("Welcome to Colin and Badhan's Game",104,37);
@@ -11,6 +14,97 @@ var Button = function(config) {
     this.label = config.label || "Click";
     this.onClick = config.onClick || function() {};
     this.color = config.color || (currentColor);
+};
+
+var piece = function(config){
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.size = config.size || 75;
+    this.color = config.color || (currentColor);
+};
+
+
+piece.prototype.draw = function() {
+    fill(this.color);
+        ellipse(this.x, this.y, this.size, this.size);
+};
+
+piece.prototype.drop = function(i){
+            if(turns % 2 === 0){
+                this.color = color(255, 0, 0);
+                turns++;
+                stacks[i]--;
+            }
+            else{
+            this.color = color(255, 255, 0);
+            turns++;
+            stacks[i]--;
+            }
+};
+for(var j = 0; j<7; j++){
+    for (var i = 0; i < 6; i++) {
+        column[j].push(new piece({
+        x:34 + j*53,
+        y: i*54 + 49,
+        size:50
+        }));
+    }
+}
+
+
+var checkHorizontalWin = function(){
+//Checks for horizontal win
+    for(var i=0; i<4; i++){
+        for(var j=0; j<6; j++){
+            if( column[i][j].color === column [i+1][j].color && column[i+1][j].color === column [i+2][j].color && column[i+2][j].color === column[i+3][j].color && column[i][j].color !== color(255, 255, 255)){
+                println("Horizontal working");
+                return;
+            }
+        }
+    }
+};
+// for whatever reason it would not work when all the checkwins were in the same function
+var checkVerticalWin = function(){
+    //Checks for Vertical win i = columns j = rows
+    for(var i=0; i<7; i++){
+        for(var j=5; j>2; j--){
+            if( column[i][j].color === column [i][j-1].color && column[i][j-1].color === column [i][j-2].color && column[i][j-2].color === column[i][j-3].color && column[i][j].color !== color(255, 255, 255)){
+                println("Vertical working");
+                return;
+            }
+        }
+    }
+};
+
+var checkDiagonalWin = function(){
+    //Checks for Diagonal Win
+    for(var r=0; r<4; r++){
+        for(var c=5; c>2; c--){
+            if( column[r][c].color === column [r+1][c-1].color && column[r+1][c-1].color === column [r+2][c-2].color && column[r+2][c-2].color === column[r+3][c-3].color && column[r][c].color !== color(255, 255, 255)){
+                println("Diagonal Working");
+                return;
+            }
+        }
+    }
+};
+
+var checkAntiDiagonalWin = function(){
+    //Checks for Anti Diagonal Win
+    for(var i=0; i<4; i++){
+        for(var j=0; j<3; j++){
+            if( column[i][j].color === column [i+1][j+1].color && column[i+1][j+1].color === column [i+2][j+2].color && column[i+2][j+2].color === column[i+3][j+3].color && column[i][j].color !== color(255, 255, 255)){
+                println("Anti Diagonal Working");
+                return;
+            }
+        }
+    }
+};
+
+var checkWin = function(){
+    checkVerticalWin();
+    checkHorizontalWin();
+    checkDiagonalWin();
+    checkAntiDiagonalWin();
 };
 
 /***************
@@ -43,6 +137,7 @@ Button.prototype.handleMouseClick = function() {
         this.onClick();
     }
 };
+
 
 var bitmojiDraw = function(bitmojiX,bitmojiY,h) {
     var p=h/10;
@@ -212,14 +307,19 @@ if (currentScene === 1){
     fill(255, 0, 0);
     triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
     fill(47, 0, 255);
-    rect(0,21,400,325);
-    for(var k = 0; k<6; k++){
-        for(var i=0; i<7; i++){
-            fill(255, 255, 255);
-            ellipse(34+56*i, 49+k*54, 50, 50);
-        }
+    rect(0,21,400,326);
+    
+for (var i = 0; i < column[0].length; i++) {
+    column[0][i].draw();
+    column[1][i].draw();
+    column[2][i].draw();
+    column[3][i].draw();
+    column[4][i].draw();
+    column[5][i].draw();
+    column[6][i].draw();
     }
 }
+
 };
 
 
@@ -229,8 +329,10 @@ has to be changed which would be problematic
 */
 var mouseClicked = function(){
         btn1.handleMouseClick();
-        if(mouseX < 60 && mouseX > 0){
-            fill(255, 0, 0);
-            rect(60,20,10,10);
-        }
+for(var i=0; i<7; i++){
+    if(mouseX < 60 + 53*i && mouseX > 7 + 53*i){
+        column[i][stacks[i]].drop(i);
+    }
+}
+    checkWin();
 };
