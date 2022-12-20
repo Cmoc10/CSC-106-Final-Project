@@ -272,7 +272,15 @@ var drawScene1 = function(){
         triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
         fill(47, 0, 255);
         rect(0,21,400,326);
-        
+        if(turns % 2 === 0){
+            fill(255, 0, 0);
+        }
+        else if(turns % 2 === 1){
+            fill(255, 255, 0);
+        }
+        rect(0,348,121,50);
+        fill(0, 0, 0);
+        text("Turn " + turns,57,371);
     for (var i = 0; i < column[0].length; i++) {
         column[0][i].draw();
         column[1][i].draw();
@@ -401,8 +409,6 @@ else if(currentScene === 2){
     btn2.handleMouseClick();
 }
 };
-
-
 
 draw = function() {
     if(currentScene === 0){
