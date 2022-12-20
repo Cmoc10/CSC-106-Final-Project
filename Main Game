@@ -1,145 +1,5 @@
-var currentScene = 1;
-var currentColor = color(255, 255, 255);
-var turns = 0;
-var stacks = [5,5,5,5,5,5,5];
-var column = [ [], [], [], [], [], [], [] ];
-background(255, 0, 0);
-fill(255, 255, 255);
-text("Welcome to Colin and Badhan's Game",104,37);
-var Button = function(config) {
-    this.x = config.x || 0;
-    this.y = config.y || 0;
-    this.width = config.width || 75;
-    this.height = config.height || 75;
-    this.label = config.label || "Click";
-    this.onClick = config.onClick || function() {};
-    this.color = config.color || (currentColor);
-};
-
-var piece = function(config){
-    this.x = config.x || 0;
-    this.y = config.y || 0;
-    this.size = config.size || 75;
-    this.color = config.color || (currentColor);
-};
-
-
-piece.prototype.draw = function() {
-    fill(this.color);
-        ellipse(this.x, this.y, this.size, this.size);
-};
-
-piece.prototype.drop = function(i){
-            if(turns % 2 === 0){
-                this.color = color(255, 0, 0);
-                turns++;
-                stacks[i]--;
-            }
-            else{
-            this.color = color(255, 255, 0);
-            turns++;
-            stacks[i]--;
-            }
-};
-for(var j = 0; j<7; j++){
-    for (var i = 0; i < 6; i++) {
-        column[j].push(new piece({
-        x:34 + j*53,
-        y: i*54 + 49,
-        size:50
-        }));
-    }
-}
-
-
-var checkHorizontalWin = function(){
-//Checks for horizontal win
-    for(var i=0; i<4; i++){
-        for(var j=0; j<6; j++){
-            if( column[i][j].color === column [i+1][j].color && column[i+1][j].color === column [i+2][j].color && column[i+2][j].color === column[i+3][j].color && column[i][j].color !== color(255, 255, 255)){
-                println("Horizontal working");
-                return;
-            }
-        }
-    }
-};
-// for whatever reason it would not work when all the checkwins were in the same function
-var checkVerticalWin = function(){
-    //Checks for Vertical win i = columns j = rows
-    for(var i=0; i<7; i++){
-        for(var j=5; j>2; j--){
-            if( column[i][j].color === column [i][j-1].color && column[i][j-1].color === column [i][j-2].color && column[i][j-2].color === column[i][j-3].color && column[i][j].color !== color(255, 255, 255)){
-                println("Vertical working");
-                return;
-            }
-        }
-    }
-};
-
-var checkDiagonalWin = function(){
-    //Checks for Diagonal Win
-    for(var r=0; r<4; r++){
-        for(var c=5; c>2; c--){
-            if( column[r][c].color === column [r+1][c-1].color && column[r+1][c-1].color === column [r+2][c-2].color && column[r+2][c-2].color === column[r+3][c-3].color && column[r][c].color !== color(255, 255, 255)){
-                println("Diagonal Working");
-                return;
-            }
-        }
-    }
-};
-
-var checkAntiDiagonalWin = function(){
-    //Checks for Anti Diagonal Win
-    for(var i=0; i<4; i++){
-        for(var j=0; j<3; j++){
-            if( column[i][j].color === column [i+1][j+1].color && column[i+1][j+1].color === column [i+2][j+2].color && column[i+2][j+2].color === column[i+3][j+3].color && column[i][j].color !== color(255, 255, 255)){
-                println("Anti Diagonal Working");
-                return;
-            }
-        }
-    }
-};
-
-var checkWin = function(){
-    checkVerticalWin();
-    checkHorizontalWin();
-    checkDiagonalWin();
-    checkAntiDiagonalWin();
-};
-
-/***************
- List of Methods
- **************/
-//Button Draw Method
-Button.prototype.changeColor = function (newColor){
-  this.color = newColor;
-};
-//Draw Prototype Method
-Button.prototype.draw = function() {
-    fill(this.color);
-        ellipse(this.x, this.y, this.width, this.height);
-    fill(255, 0, 0);
-    textSize(23);
-    textAlign(CENTER,CENTER);
-    text(this.label, this.x, this.y);
-};
-//check if mouse is inside
-Button.prototype.isMouseInside = function() {
-    return mouseX > this.x-this.width/2 &&
-           mouseX < (this.x + this.width/2) &&
-           mouseY > this.y - this.height/2 &&
-           mouseY < (this.y + this.height/2);
-};
-
-//MouseClick Handle Method
-Button.prototype.handleMouseClick = function() {
-    if (this.isMouseInside()) {
-        this.onClick();
-    }
-};
-
-
-var bitmojiDraw = function(bitmojiX,bitmojiY,h) {
+// Bitmoji
+    var bitmojiDraw = function(bitmojiX,bitmojiY,h) {
     var p=h/10;
 fill(255, 224, 166);
 rect((bitmojiX+26)*p,(bitmojiY+72)*p,0.9*h,2.1*h,15);
@@ -201,7 +61,6 @@ bezier((bitmojiX+50)*p,(bitmojiY+32)*p,(bitmojiX+59)*p,(bitmojiY+41)*p,(bitmojiX
         fill(229,184,135);
         rect(x + 74*p, y + 84*p,58*p,32*p); // line up
     };
-    
     var drawEyes = function(x,y,h){
         var p = h/100;
         fill(255, 255, 255);
@@ -211,20 +70,17 @@ bezier((bitmojiX+50)*p,(bitmojiY+32)*p,(bitmojiX+59)*p,(bitmojiY+41)*p,(bitmojiX
         ellipse(x + 90*p, y + 100*p,10*p,10*p); // left eye ball
         ellipse(x + 117*p, y + 100*p,10*p,10*p); // left eye ball
     };
-    
     var drawNose = function(x,y,h){
         var p = h/100;
         stroke(0, 0, 0);
         fill(229,184,135);
         bezier(x + 104*p, y + 126*p, x + 99*p, y + 118*p, x + 120*p, y + 128*p,x + 104*p, y + 105*p); // nose
     };
-    
     var drawMouth = function(x,y,h){
         var p = h/100;
         fill(255, 255, 255);
         arc(x + 105*p, y + 132*p,27*p,11*p,1,180); // mouth
     };
-    
     var drawBody = function(x,y,h){
         var p = h/100;
         noStroke();
@@ -235,7 +91,6 @@ bezier((bitmojiX+50)*p,(bitmojiY+32)*p,(bitmojiX+59)*p,(bitmojiY+41)*p,(bitmojiX
         fill(229,184,135); // neck color
         arc(x + 104*p, y + 160*p,27*p,11*p,1,180); // neck to collar
     };
-    
     var drawArms = function(x,y,h){
         var p = h/100;
         noStroke();
@@ -246,7 +101,6 @@ bezier((bitmojiX+50)*p,(bitmojiY+32)*p,(bitmojiX+59)*p,(bitmojiY+41)*p,(bitmojiX
         rect(x + 35*p, y + 209*p,24*p,22*p); // left arm
         rect(x + 150*p, y + 209*p,24*p,22*p); // right arm
     };
-    
     var drawHat = function(x,y,h){
         var p = h/100;
         stroke(0, 0, 0);
@@ -255,73 +109,261 @@ bezier((bitmojiX+50)*p,(bitmojiY+32)*p,(bitmojiX+59)*p,(bitmojiY+41)*p,(bitmojiX
         rect(x + 37*p, y + 72*p,133*p,7*p); //hat bottom
         fill(124, 193, 235);
         textSize(30*p);
-        text("R", x + 92*p, y + 65*p);
+        text("R", x + 102*p, y + 58*p);
     };
-    
     var drawIn = function(x,y,h){
         var p = h/100;
         fill(255, 255, 255);
         textSize(40*p);
-        text("BH", x + 75*p, y + 204*p); // initials
+        text("BH", x + 102*p, y + 198*p); // initials
     };
-    
     var drawHalf = function(x,y,h){
         drawHead(x,y,h);
         drawEyes(x,y,h);
         drawNose(x,y,h);
         drawMouth(x,y,h);
     };
-    
     var drawFull = function(x,y,h){
         drawBody(x,y,h);
         drawArms(x,y,h);
         drawHat(x,y,h);
         drawIn(x,y,h);
     };
-    
-    var drawBitmojiB = function(x,y,h){
+    var drawBitmoji = function(x,y,h){
         var p = h/100;
         drawHalf(x,y,h);
         drawFull(x,y,h);
     };
 
+var currentScene = 0;
+var currentColor = color(255, 255, 255);
+var turns = 0;
+var stacks = [5,5,5,5,5,5,5];
+var column = [ [], [], [], [], [], [], [] ];
+var player;
+
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 75;
+    this.height = config.height || 75;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+    this.color = config.color || (currentColor);
+};
+
+/***************
+ List of Methods
+ **************/
+//Button Draw Method
+Button.prototype.changeColor = function (newColor){
+  this.color = newColor;
+};
+//Draw Prototype Method
+Button.prototype.draw = function() {
+    fill(this.color);
+        ellipse(this.x, this.y, this.width, this.height);
+    fill(255, 0, 0);
+    textSize(23);
+    textAlign(CENTER,CENTER);
+    text(this.label, this.x, this.y);
+};
+//check if mouse is inside
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x-this.width/2 &&
+           mouseX < (this.x + this.width/2) &&
+           mouseY > this.y - this.height/2 &&
+           mouseY < (this.y + this.height/2);
+};
+//MouseClick Handle Method
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
 
 var btn1 = new Button({
-    x:203,
-    y:263,
+    x:200,
+    y:352,
     label:"Start",
     onClick: function(){
         currentScene = 1;
     }
 });
+var btn2 = new Button({
+    x:195,
+    y:305,
+    label:"Restart",
+    onClick: function(){
+        currentScene = 0;
+        Program.restart();
+        //drawScene
+        //Program.restart();
+    }
+});
 
 
-draw= function() {
-if(currentScene === 0){
-    bitmojiDraw(73,200,10);   
-    drawBitmojiB(248, 207, 40);
-    btn1.draw();
-}
-if (currentScene === 1){
-    background(255, 255, 255);
-    fill(255, 0, 0);
-    triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
-    fill(47, 0, 255);
-    rect(0,21,400,326);
-    
-for (var i = 0; i < column[0].length; i++) {
-    column[0][i].draw();
-    column[1][i].draw();
-    column[2][i].draw();
-    column[3][i].draw();
-    column[4][i].draw();
-    column[5][i].draw();
-    column[6][i].draw();
+var piece = function(config){
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.size = config.size || 75;
+    this.color = config.color || (currentColor);
+};
+piece.prototype.draw = function() {
+    fill(this.color);
+        ellipse(this.x, this.y, this.size, this.size);
+};
+piece.prototype.drop = function(i){
+            if(turns % 2 === 0){
+                this.color = color(255, 0, 0);
+                turns++;
+                stacks[i]--;
+                player = "Red";
+            } else{
+                this.color = color(255, 255, 0);
+                turns++;
+                stacks[i]--;
+                player = "Yellow";
+            }
+};
+for(var j = 0; j<7; j++){
+    for (var i = 0; i < 6; i++) {
+        column[j].push(new piece({
+        x:34 + j*53,
+        y: i*54 + 49,
+        size:50
+        }));
     }
 }
 
+var drawScene0 = function() {
+    currentScene = 0;
+    var x = 51;
+    var y = 4;
+    var j = 6;
+    var k = 33;
+    background(89, 205, 255);
+    fill(255, 255, 255);
+    var f = createFont("impact");
+    textFont(f);
+    textSize(66);
+    text("Welcome to", 150 + x, 60 + y);
+    text("Colin and", 148 + x, 130 + y);
+    text("Badhan's", 150 + x, 200 + y);
+    fill(0, 0, 0);
+    arc(63 + j + x, 235 + k + y, 15, 39, 90, 270);
+    textSize(65);
+    text("4", 215 + j + x, 235 + k + y);
+    rect(63 + j + x, 214 + k + y, 151, 40);
+    fill(255, 255, 255);
+    textSize(38);
+    text("CONNECT", 131 + j + x, 235 + k + y);
+    fill(255, 0, 0);
+    textSize(52);
+    text("4", 214.5 + j + x, 235 + k + y);
+    drawBitmoji(245, 289 + 22, 35);
+    bitmojiDraw(93, 355 + 22, 8.25);
+    btn1.draw();
+};
+var drawScene2 = function() {
+    currentScene = 2;
+    background(89, 205, 255);
+    var x = 35;
+    var y = -140;
+    var j = 12;
+    var k = -11;
+    var f = createFont("impact");
+    textFont(f);
+    fill(0, 0, 0);
+    arc(63 + j + x, 235 + k + y, 15, 39, 90, 270);
+    textSize(65);
+    text("4", 215 + j + x, 235 + k + y);
+    rect(63 + j + x, 214 + k + y, 151, 40);
+    fill(255, 255, 255);
+    textSize(38);
+    text("CONNECT", 131 + j + x, 235 + k + y);
+    fill(255, 0, 0);
+    textSize(52);
+    text("4", 214.5 + j + x, 235 + k + y);
+    if (player === "Red") {
+        fill(255, 0, 0);
+        text("Red", 190, 165);
+        fill(255, 255, 255);
+        text("Won The Game", 200, 234);
+    } else {
+        fill(255, 255, 0);
+        text("Yellow", 190, 165);
+        fill(255, 255, 255);
+        text("Won The Game", 200, 234);
+    }
+    btn2.draw();
 };
 
+var checkHorizontalWin = function(){
+//Checks for horizontal win
+    for(var i=0; i<4; i++){
+        for(var j=0; j<6; j++){
+            if( column[i][j].color === column [i+1][j].color && column[i+1][j].color === column [i+2][j].color && column[i+2][j].color === column[i+3][j].color && column[i][j].color !== color(255, 255, 255)){
+                //noLoop();
+                drawScene2();
+                //currentScene = 2;
+                return;
+            }
+        }
+    }
+};
+// for whatever reason it would not work when all the checkwins were in the same function
+var checkVerticalWin = function(){
+    //Checks for Vertical win i = columns j = rows
+    for(var i=0; i<7; i++){
+        for(var j=5; j>2; j--){
+            if( column[i][j].color === column [i][j-1].color && column[i][j-1].color === column [i][j-2].color && column[i][j-2].color === column[i][j-3].color && column[i][j].color !== color(255, 255, 255)){
+                //currentScene = 2;
+                //noLoop();
+                drawScene2();
+                //println(player + " Won The Game");
+                return;
+            }
+        }
+    }
+};
+
+var checkDiagonalWin = function(){
+    //Checks for Diagonal Win
+    for(var r=0; r<4; r++){
+        for(var c=5; c>2; c--){
+            if( column[r][c].color === column [r+1][c-1].color && column[r+1][c-1].color === column [r+2][c-2].color && column[r+2][c-2].color === column[r+3][c-3].color && column[r][c].color !== color(255, 255, 255)){
+                //currentScene = 2;
+                //noLoop();
+                drawScene2();
+                //println(player + " Won The Game");
+                return;
+            }
+        }
+    }
+};
+
+var checkAntiDiagonalWin = function(){
+    //Checks for Anti Diagonal Win
+    for(var i=0; i<4; i++){
+        for(var j=0; j<3; j++){
+            if( column[i][j].color === column [i+1][j+1].color && column[i+1][j+1].color === column [i+2][j+2].color && column[i+2][j+2].color === column[i+3][j+3].color && column[i][j].color !== color(255, 255, 255)){
+                //currentScene = 2;
+                //noLoop();
+                drawScene2();
+                //println(player + " Won The Game");
+                return;
+            }
+        }
+    }
+};
+
+var checkWin = function(){
+    checkVerticalWin();
+    checkHorizontalWin();
+    checkDiagonalWin();
+    checkAntiDiagonalWin();
+};
 
 /*for the mouse clicked function I want to make the circles objects and then change their color values
 an alternative option would be to create new circles that draw over but then the background
@@ -336,3 +378,34 @@ for(var i=0; i<7; i++){
 }
     checkWin();
 };
+
+draw = function() {
+    if(currentScene === 0){
+        drawScene0();
+    }
+    
+    // if(currentScene === 2){
+    //     drawScene2();
+    // }
+    
+    if (currentScene === 1){
+        background(255, 255, 255);
+        fill(255, 0, 0);
+        triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
+        fill(47, 0, 255);
+        rect(0,21,400,326);
+        
+    for (var i = 0; i < column[0].length; i++) {
+        column[0][i].draw();
+        column[1][i].draw();
+        column[2][i].draw();
+        column[3][i].draw();
+        column[4][i].draw();
+        column[5][i].draw();
+        column[6][i].draw();
+        }
+    }
+
+};
+
+
