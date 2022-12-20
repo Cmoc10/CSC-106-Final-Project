@@ -183,6 +183,7 @@ Button.prototype.handleMouseClick = function() {
     }
 };
 
+// Start Button For Splash
 var btn1 = new Button({
     x:200,
     y:352,
@@ -191,6 +192,8 @@ var btn1 = new Button({
         currentScene = 1;
     }
 });
+
+// Restart Button For Win Screen
 var btn2 = new Button({
     x:195,
     y:305,
@@ -203,6 +206,7 @@ var btn2 = new Button({
 });
 
 
+// Game Discs
 var piece = function(config){
     this.x = config.x || 0;
     this.y = config.y || 0;
@@ -236,6 +240,7 @@ for(var j = 0; j<7; j++){
     }
 }
 
+// Splash Screen
 var drawScene0 = function() {
     currentScene = 0;
     var x = 51;
@@ -266,21 +271,14 @@ var drawScene0 = function() {
     btn1.draw();
 };
 
+//Game Screen
 var drawScene1 = function(){
           background(255, 255, 255);
         fill(255, 0, 0);
         triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
         fill(47, 0, 255);
         rect(0,21,400,326);
-        if(turns % 2 === 0){
-            fill(255, 0, 0);
-        }
-        else if(turns % 2 === 1){
-            fill(255, 255, 0);
-        }
-        rect(0,348,121,50);
-        fill(0, 0, 0);
-        text("Turn " + turns,57,371);
+        
     for (var i = 0; i < column[0].length; i++) {
         column[0][i].draw();
         column[1][i].draw();
@@ -292,6 +290,7 @@ var drawScene1 = function(){
         }  
 };
 
+// Win Screen
 var drawScene2 = function() {
     currentScene = 2;
     background(89, 205, 255);
@@ -385,6 +384,7 @@ var checkAntiDiagonalWin = function(){
     }
 };
 
+// Function To Check Wins
 var checkWin = function(){
     checkVerticalWin();
     checkHorizontalWin();
@@ -392,7 +392,7 @@ var checkWin = function(){
     checkAntiDiagonalWin();
 };
 
-
+// Mouse Clicked Function For Button
 var mouseClicked = function(){
 if(currentScene === 0){
     btn1.handleMouseClick();
@@ -410,6 +410,8 @@ else if(currentScene === 2){
 }
 };
 
+
+// Final Function To Determine What Screen Is Shown
 draw = function() {
     if(currentScene === 0){
         drawScene0();
