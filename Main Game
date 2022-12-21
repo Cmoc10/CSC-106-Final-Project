@@ -278,7 +278,15 @@ var drawScene1 = function(){
         triangle(mouseX-10,0,mouseX,17,mouseX+10,0);
         fill(47, 0, 255);
         rect(0,21,400,326);
-        
+        if(turns % 2 === 0){
+         fill(255, 0, 0);
+        }
+        else{
+         fill(255, 255, 0);
+        }
+        rect(0,348, 114,50);
+        fill(0, 0, 0);
+        text("Turn " + turns,57,374);
     for (var i = 0; i < column[0].length; i++) {
         column[0][i].draw();
         column[1][i].draw();
